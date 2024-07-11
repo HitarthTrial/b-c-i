@@ -16,6 +16,7 @@ export class BCIStack extends cdk.Stack {
 
     // DynamoDB table for customer data
     const customerTable = new dynamodb.Table(this, 'CustomerTable', {
+      tableName: 'CustomerTable', 
       partitionKey: { name: 'customerId', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     });
@@ -23,6 +24,7 @@ export class BCIStack extends cdk.Stack {
     // Export the table name for use in the API stack
     new cdk.CfnOutput(this, 'CustomerTableName', {
       value: customerTable.tableName,
+      exportName: 'CustomerTableName', // Export this value under the name 'CustomerTableName'
     });
   }
 }

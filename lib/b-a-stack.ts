@@ -12,7 +12,7 @@ export class BAStack extends cdk.Stack {
 
     // Lambda function for querying customer data
     const queryLambda = new lambda.Function(this, 'QueryLambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.PYTHON_3_10,
       code: lambda.Code.fromAsset('lambda/bank-poc'),
       handler: 'query.handler',
       environment: {
