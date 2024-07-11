@@ -20,15 +20,29 @@ jobs:
       - name: Git clone the repository
         uses: actions/checkout@v3
 
+      - name: Print OIDC Token
+        id: print-token
+        run: |
+          echo "Requesting OIDC token..."
+          echo "URL: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_URL }}"
+          echo "URL with environment variable: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}"
+          echo "Requesting the token..."
+          RESPONSE=$(curl -H "Authorization: bearer $ACTIONS_RUNTIME_TOKEN" $ACTIONS_ID_TOKEN_REQUEST_URL)
+          echo "OIDC Token Response: $RESPONSE"
+
       - name: configure aws credentials
         id: aws-credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
-          role-to-assume: arn:aws:iam::381492094283:role/GitHubAction-AssumeRoleWithAction # Change to reflect your IAM role’s ARN
+          role-to-assume: arn:aws:iam::381492094283:role/GitHubAction-AssumeRoleWithAction  # Change to reflect your IAM role’s ARN
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
+        env:
+          ACTIONS_STEP_DEBUG: true
 
       # Hello from AWS: WhoAmI
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
+        env:
+          ACTIONS_STEP_DEBUG: true
